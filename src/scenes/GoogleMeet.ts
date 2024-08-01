@@ -95,6 +95,7 @@ export class GoogleMeet extends Scene {
     const closeWindow = this.add.zone(152, 141, 7, 7).setOrigin(0);
     closeWindow.setInteractive({ useHandCursor: true });
     closeWindow.on("pointerup", () => {
+      increaseMeetVisits();
       this.scene.stop("GoogleMeet");
     });
 
@@ -103,6 +104,7 @@ export class GoogleMeet extends Scene {
     const x = this.add.text(628, 45, "x").setOrigin(0);
     close.setInteractive({ useHandCursor: true });
     close.on("pointerup", () => {
+      increaseMeetVisits();
       this.scene.stop("Desktop");
       this.scene.stop("GoogleMeet");
       this.scene.resume("Office");
@@ -118,15 +120,14 @@ export class GoogleMeet extends Scene {
 
     if (this.isBooksShelved && this.isClothesAway && this.isPicStraight) {
       this.hasWon = true;
-      increaseMeetVisits();
+
       this.alert.setVisible(true);
       this.success.setVisible(true);
     }
   }
   onEvent() {
     if (!this.hasWon) {
-      increaseMeetVisits();
-      setIsRoomMessy(true)
+      setIsRoomMessy(true);
       this.alert.setVisible(true);
       this.tooSlow.setVisible(true);
     }

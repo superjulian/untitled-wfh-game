@@ -44,13 +44,15 @@ export class GameOver extends Scene {
 
     // Credits button
     const creditsButton = this.add.image(495, 365, "creditsButton");
-    creditsButton.setInteractive();
+    creditsButton.setInteractive({ useHandCursor: true });
     creditsButton.on("pointerup", () => {
       this.scene.stop("Desktop");
       this.scene.stop("GoogleMeet");
       this.scene.stop("PlantLady");
       this.scene.stop("Office");
       this.scene.launch("Credits");
+      this.scene.stop("GameOver");
+
     });
   }
 }

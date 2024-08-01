@@ -16,8 +16,7 @@ body {
 
 @font-face {
     font-family: "dogicapixel";
-    src: url('public/dogicapixel.ttf');
+    src: url('dogicapixel.ttf');
     font-weight: 400;
     font-weight: normal;
-
 }

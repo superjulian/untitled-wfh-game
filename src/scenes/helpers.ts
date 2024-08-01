@@ -194,7 +194,11 @@ export const increaseCalVisits = () => calVisits++;
 
 export let meetVisits = 0;
 
-export const increaseMeetVisits = () => meetVisits++;
+export const increaseMeetVisits = () => {
+  console.log("meetVisits", meetVisits)
+    meetVisits++;
+    console.log("meetVisits", meetVisits)
+}
 
 export let isRoomMessy = false;
 
@@ -212,6 +216,7 @@ export const increaseClock = (timestable: GameObjects.Image[]) => {
   //@ts-ignore
   timestable.push(timestable.shift());
   count++;
+  console.log(count)
 };
 
 export let endMessage = "You got a lot done today!"
@@ -226,7 +231,7 @@ export const updateEndMessage = () => {
   if (isRoomMessy) {
     endMessage = "It was an ok day, \n\nMaybe tomorrow you can clean your \n\nroom before the meeting starts."
   }
-  if (isBugsSquished) {
+  if (!isBugsSquished) {
     endMessage = "You weren't able to squish \n\nall the bugs today... \n\nyou'll get to it tomorrow!"
   }
 }

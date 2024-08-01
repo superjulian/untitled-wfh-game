@@ -23,6 +23,8 @@ export class Office extends Scene {
   background: GameObjects.Image;
   plantMap: { [key: string]: { [key: number]: GameObjects.Image } };
   timestable: GameObjects.Image[];
+  peeBar: GameObjects.Rectangle
+  backBar: GameObjects.Rectangle
 
   constructor() {
     super("Office");
@@ -33,7 +35,7 @@ export class Office extends Scene {
     sky.scale = 0.5;
     this.background = this.add.image(175 * 2, 125 * 2, "office");
 
-    const emailNoti = this.sound.add('emailNoti');
+    const emailNoti = this.sound.add("emailNoti");
 
     const rug = this.add.image(178 * 2, 235 * 2, "rug");
     const books = this.add.image(115 * 2, 91 * 2, "books");
@@ -48,10 +50,10 @@ export class Office extends Scene {
     const peeText = this.add
       .text(540, 6, "Pee Meter", { color: "#000000", fontSize: "14px" })
       .setOrigin(0);
-    const backBar = this.add.rectangle(540, 20, 150, 20, 0x000000).setOrigin(0);
-    const peeBar = this.add.rectangle(543, 23, 0, 14, 0xffea00).setOrigin(0);
-    peeBar.setVisible(false);
-    backBar.setVisible(false);
+    this.backBar = this.add.rectangle(540, 20, 150, 20, 0x000000).setOrigin(0);
+    this.peeBar = this.add.rectangle(543, 23, 0, 14, 0xffea00).setOrigin(0);
+    this.peeBar.setVisible(false);
+    this.backBar.setVisible(false);
     peeText.setVisible(false);
 
     // Clock
@@ -119,17 +121,11 @@ export class Office extends Scene {
     // Coffee button
     mug.setInteractive({ useHandCursor: true });
     mug.on("pointerup", () => {
-        peeBar.setVisible(true);
-    backBar.setVisible(true);
-    peeText.setVisible(true);
-    peeBar.width +=15
-    if (peeBar.width > backBar.width){
-        writeEndMessage("You drank too much coffee\n\nYou aren't feeling well and have to\n\nsign off early")
-        this.scene.pause("Office")
-        this.scene.launch("Desktop")
-        this.scene.pause("Desktop")
-        this.scene.launch("GameOver")
-    }
+      this.peeBar.setVisible(true);
+      this.backBar.setVisible(true);
+      peeText.setVisible(true);
+      
+      this.peeBar.width += 14;
     });
 
     // Laptop Button
@@ -145,16 +141,30 @@ export class Office extends Scene {
     });
 
     // gameover Button
-    const over = this.add.rectangle(100, 100, 50, 50, 0x000000)
+    const over = this.add.rectangle(100, 100, 50, 50, 0x000000);
     over.setInteractive({ useHandCursor: true });
     over.on("pointerup", () => {
-    this.scene.launch("Desktop");
+      this.scene.launch("Desktop");
 
       this.scene.launch("GameOver");
       this.scene.pause("Office");
     });
   }
   update() {
+// Pee bar end condition
+if (this.peeBar.width > this.backBar.width) {
+  this.peeBar.width = 0
+  writeEndMessage(
+    "You drank too much coffee\n\nYou aren't feeling well and have to\n\nsign off early"
+  );
+
+  this.scene.pause("Office");
+  this.scene.launch("Desktop");
+  this.scene.pause("Desktop");
+  this.scene.launch("GameOver");
+}
+
+    //Game End Condition
     if (plantVisits === 2) {
       increasePlantVisits();
       increaseClock(this.timestable);
@@ -168,14 +178,19 @@ export class Office extends Scene {
       increaseClock(this.timestable);
     }
     if (meetVisits === 1) {
-        increaseMeetVisits();
-        increaseClock(this.timestable);
-      }
-    if (count === 4){
-        this.scene.launch("Desktop");
-      this.scene.launch("GameOver");
-      this.scene.pause("Office");
+      console.log("in if");
+      increaseMeetVisits();
+      increaseClock(this.timestable);
+    }
+    if (count === 4) {
+      this.time.addEvent({
+        delay: 1200,
+        callback: () => {
+          this.scene.launch("Desktop");
+          this.scene.launch("GameOver");
+          this.scene.pause("Office");
+        },
+      });
     }
   }
- 
 }
