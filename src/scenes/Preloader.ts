@@ -14,6 +14,9 @@ export class Preloader extends Scene {
     this.load.audio("music", "sounds/music.mp3");
     this.load.audio("emailNoti", "sounds/slackNoti.mp3");
     this.load.audio("meetSound", "sounds/meetSound.mp3");
+    this.load.audio("cal-fail", "sounds/cal-fail.mp3");
+    this.load.audio("cal-pass", "sounds/cal-pass.mp3");
+
 
     // Game Over
     this.load.image("GameOver", "backgrounds/GameOver.png");
@@ -110,11 +113,32 @@ export class Preloader extends Scene {
     // Overlays
     this.load.image("bg-laptop", "backgrounds/laptop.png");
     this.load.image("cal-overlay", "backgrounds/cal-overlay.png");
+    // calander sprites
     this.load.spritesheet(
       "very-important-meeting",
       "sprites/very-important-meeting.png",
       { frameWidth: 72, frameHeight: 36 }
     );
+    this.load.spritesheet(
+        "biquarterly-review",
+        "sprites/biquarterly-review.png",
+        { frameWidth: 72, frameHeight: 36 }
+      );    
+    this.load.spritesheet(
+        "bicostal-review",
+        "sprites/bicostal-review.png",
+        { frameWidth: 72, frameHeight: 36 }
+      );
+    this.load.spritesheet(
+        "bicentennial-review",
+        "sprites/bicentennial-review.png",
+        { frameWidth: 72, frameHeight: 36 }
+      );    
+    this.load.spritesheet(
+        "quick-sync",
+        "sprites/quick-sync.png",
+        { frameWidth: 72, frameHeight: 36 }
+      );
     this.load.spritesheet("ticker", "sprites/ticker-sheet.png", {
       frameWidth: 74,
       frameHeight: 9,
