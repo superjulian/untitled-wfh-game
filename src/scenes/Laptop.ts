@@ -179,6 +179,7 @@ init(data: any) {
       setIsBugsSquished(true)
       this.scene.stop("Laptop");
       this.scene.stop("Desktop");
+      this.scene.resume("Office");
 
     }
   }
