@@ -177,6 +177,7 @@ init(data: any) {
     if (this.bugs < 1){
       this.fist?.destroy();
       setIsBugsSquished(true)
+      increaseBugVisits()
       this.scene.stop("Laptop");
       this.scene.stop("Desktop");
       this.scene.resume("Office");
