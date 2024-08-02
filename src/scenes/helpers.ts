@@ -234,7 +234,7 @@ export const writeEndMessage = (newMessage: string) => {
 export const updateEndMessage = () => {
   console.log(isRoomMessy)
   if (plantStats.aloe.healthNum >2 && plantStats.diffen.healthNum >2 && plantStats.poth.healthNum >2){
-    endMessage = "You are a plant wizard! \n\nAfter work, enjoy your oxygen rich home."
+    endMessage = "You are a plant wizard! \n\nAfter work, enjoy your oxygen \n\nrich home."
   }
   if (isRoomMessy) {
     endMessage = "It was an ok day, \n\nMaybe tomorrow you can clean your \n\nroom before the meeting starts."
