@@ -26,7 +26,7 @@ export class Desktop extends Scene {
      // google meet game button
      meet.setInteractive({ useHandCursor: true });
      meet.on("pointerdown", () => {
-        meetSound.play()
+        meetSound.play({seek:.5})
       });
      
      meet.on("pointerup", () => {

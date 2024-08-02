@@ -11,7 +11,7 @@ export class GameOver extends Scene {
 
   create() {
     const emailNoti = this.sound.add("emailNoti")
-    emailNoti.play()
+    emailNoti.play({seek:.2})
     updateEndMessage();
     this.background = this.add.image(350, 250, "GameOver");
     this.background.setScale(0.7);

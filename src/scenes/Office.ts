@@ -2,20 +2,21 @@ import { Scene, GameObjects } from "phaser";
 import {
   bugVisits,
   calVisits,
+  catPets,
   changeOfficePlants,
   count,
   evaluatePlantStats,
-  hasOpenedComputer,
   increaseBugVisits,
   increaseCalVisits,
+  increaseCatPets,
   increaseClock,
   increaseMeetVisits,
   increasePlantVisits,
   meetVisits,
-  PlantAction,
   PlantNames,
   plantVisits,
   setHasOpenedComputer,
+  setIsPeeFull,
   writeEndMessage,
 } from "./helpers";
 
@@ -56,6 +57,7 @@ export class Office extends Scene {
     this.backBar.setVisible(false);
     peeText.setVisible(false);
 
+
     // Clock
     const clock = this.add.image(80, 150, "clock");
     const nineAM = this.add.image(97, 78, "9am");
@@ -66,6 +68,28 @@ export class Office extends Scene {
     const fivePM = this.add.image(103, 78, "5pm");
     fivePM.setVisible(false);
     this.timestable = [nineAM, twelvePM, twelvePM, twoPM, fivePM];
+    
+    //Cat
+    const meow = this.sound.add("meow");
+    const catTree = this.add.image(35, 330, "catTree");
+    const cat = this.add.image(30, 298, "cat");
+    const heart = this.add.image(31, 260, "heart");
+    heart.setVisible(false)
+
+    cat.setInteractive()
+    cat.on("pointerover", ()=>{
+      heart.setVisible(true)
+    })
+    cat.on("pointerout", ()=>{
+      heart.setVisible(false)
+    })
+    cat.on("pointerup", ()=>{
+      meow.play({
+        mute: false,
+        volume: 0.25,
+      })
+      increaseCatPets()
+    })
 
     // Plants 1
     const aloe1 = this.add.image(211 * 2, 84 * 2, "aloe1");
@@ -139,25 +163,22 @@ export class Office extends Scene {
       changeOfficePlants(this.plantMap, PlantNames.aloe);
       this.scene.pause("Office");
     });
-
-    // gameover Button
-    const over = this.add.rectangle(100, 100, 50, 50, 0x000000);
-    over.setInteractive({ useHandCursor: true });
-    over.on("pointerup", () => {
-      this.scene.launch("Desktop");
-
-      this.scene.launch("GameOver");
-      this.scene.pause("Office");
-    });
   }
   update() {
 // Pee bar end condition
 if (this.peeBar.width > this.backBar.width) {
   this.peeBar.width = 0
-  writeEndMessage(
-    "You drank too much coffee\n\nYou aren't feeling well and have to\n\nsign off early"
-  );
+  setIsPeeFull(true)
 
+  this.scene.pause("Office");
+  this.scene.launch("Desktop");
+  this.scene.pause("Desktop");
+  this.scene.launch("GameOver");
+}
+
+//Cat end game condition
+if(catPets === 5) {
+  increaseCatPets()
   this.scene.pause("Office");
   this.scene.launch("Desktop");
   this.scene.pause("Desktop");

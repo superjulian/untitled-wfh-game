@@ -188,6 +188,10 @@ export let bugVisits = 0;
 
 export const increaseBugVisits = () => bugVisits++;
 
+export let catPets = 0;
+
+export const increaseCatPets = () => catPets++;
+
 export let calVisits = 0;
 
 export const increaseCalVisits = () => calVisits++;
@@ -207,6 +211,10 @@ export const setIsRoomMessy = (bool:boolean) => {isRoomMessy=bool};
 export let isBugsSquished = false;
 
 export const setIsBugsSquished = (bool:boolean) => {isBugsSquished=bool};
+
+export let isPeeFull = false;
+
+export const setIsPeeFull = (bool:boolean) => {isPeeFull=bool};
 
 export let count = 0;
 
@@ -234,6 +242,13 @@ export const updateEndMessage = () => {
   if (!isBugsSquished) {
     endMessage = "You weren't able to squish \n\nall the bugs today... \n\nyou'll get to it tomorrow!"
   }
+  if (catPets > 5){
+     endMessage = "Your cat knocked coffee on your \n\nkeyboard. Your computer broke and \n\nyou have to sign off early."
+  }
+  if (isPeeFull){
+    endMessage = "You drank too much coffee\n\nYou aren't feeling well and have to\n\nsign off early"
+  }
+
 }
 /**
  *
@@ -251,3 +266,5 @@ export const alignObjectsHorizontal = (
     obj.setPosition(left + offset * i, obj.y);
   });
 };
+
+

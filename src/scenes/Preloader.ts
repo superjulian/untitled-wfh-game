@@ -12,8 +12,10 @@ export class Preloader extends Scene {
 
     // Sounds
     this.load.audio("music", "sounds/music.mp3");
-    this.load.audio("emailNoti", "sounds/slackNoti.mp3");
+    this.load.audio("emailNoti", "sounds/emailNoti.mp3");
     this.load.audio("meetSound", "sounds/meetSound.mp3");
+    this.load.audio("meow", "sounds/meow.mp3");
+
 
     // Game Over
     this.load.image("GameOver", "backgrounds/GameOver.png");
@@ -71,6 +73,9 @@ export class Preloader extends Scene {
     this.load.image("9am", "9am.png");
     this.load.image("12pm", "12pm.png");
     this.load.image("5pm", "5pm.png");
+    this.load.image("cat", "cat.png");
+    this.load.image("catTree", "cat-tree.png");
+    this.load.image("heart", "heart.png");
 
     // Laptop Overlays
     this.load.image("bg-laptop", "backgrounds/laptop.png");
