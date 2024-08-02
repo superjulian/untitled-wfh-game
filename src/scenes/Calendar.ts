@@ -1,5 +1,5 @@
 import Phaser from "phaser";
-import { increaseCalVisits, width } from "./helpers";
+import { increaseCalVisits, width, increaseMissedMeetings, resetMissedMeetings } from "./helpers";
 
 interface ColumnContext {
   key: Phaser.Input.Keyboard.Key;
@@ -87,6 +87,7 @@ function missed_meeting_collision_callback_factory(
     col.hit_zone.setPosition(col.hit_zone.x, col.hit_zone.y + meeting.height);
     meeting.body?.destroy();
     col.miss_sound.play();
+    increaseMissedMeetings();
   };
 }
 
@@ -99,6 +100,7 @@ export default class Calendar extends Phaser.Scene {
     this.boxes = [];
   }
   create() {
+    resetMissedMeetings();
     //background
     this.add.image(350, 250, "cal-overlay");
     if (!this.input || !this.input.keyboard) {

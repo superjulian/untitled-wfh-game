@@ -141,7 +141,7 @@ export class Preloader extends Scene {
     this.load.spritesheet(
         "quick-sync",
         "sprites/quick-sync.png",
-        { frameWidth: 72, frameHeight: 36 }
+        { frameWidth: 72, frameHeight: 80 }
       );
     this.load.spritesheet("ticker", "sprites/ticker-sheet.png", {
       frameWidth: 74,
