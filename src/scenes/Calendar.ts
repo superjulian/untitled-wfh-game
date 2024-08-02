@@ -9,6 +9,8 @@ interface ColumnContext {
   hit_zone: Phaser.Physics.Arcade.Sprite;
 
   meetings: Phaser.Physics.Arcade.Sprite[];
+  miss_sound: Phaser.Sound.BaseSound;
+  hit_sound: Phaser.Sound.BaseSound;
 }
 // Beat map: column, time, velocity
 const BeatMap = [
@@ -37,7 +39,28 @@ const BeatMap = [
   [2, 30000, 70],
   [3, 31000, 70],
   [1, 32000, 70],
-
+  [4, 38000, 90],
+  [1, 39000, 90],
+  [4, 40000, 90],
+  [1, 41000, 90],
+  [2, 41500, 90],
+  [4, 43000, 90],
+  [1, 44000, 90],
+  [2, 44500, 90],
+  [3, 45000, 90],
+  [4, 46000, 90],
+  [5, 48000, 110],
+  [5, 48500, 110],
+  [5, 49000, 110],
+  [4, 50000, 110],
+  [3, 52000, 110],
+  [2, 54000, 110],
+  [1, 56000, 110],
+  [6, 60000, 130],
+  [6, 61000, 130],
+  [6, 62000, 130],
+  [0, 63000, 130],
+  [0, 63000, 130],
   // [3, 13000, 50],
   // [3, 16000, 50],
   // [4, 8000, 50],
@@ -63,6 +86,7 @@ function missed_meeting_collision_callback_factory(
     );
     col.hit_zone.setPosition(col.hit_zone.x, col.hit_zone.y + meeting.height);
     meeting.body?.destroy();
+    col.miss_sound.play();
   };
 }
 
@@ -83,13 +107,11 @@ export default class Calendar extends Phaser.Scene {
     }
     // helpers & constants
     const x_posistions = [150.5, 222.5, 294, 364, 434, 504, 576];
+    const meeting_spright_keys = ['very-important-meeting', 'biquarterly-review', 'bicostal-review', 'bicentennial-review', 'quick-sync'];
+    let meeting_spright_index = 0;
     const spawn_meeting_for_col = (col: ColumnContext, velocity: number) => {
-      const s = this.physics.add.sprite(
-        col.x_pos,
-        400,
-        "very-important-meeting",
-        2
-      );
+      const s = this.physics.add.sprite(col.x_pos, 400, meeting_spright_keys[meeting_spright_index], 2);
+      meeting_spright_index = (meeting_spright_index + 1) % meeting_spright_keys.length;
       s.setVelocityY(velocity * -1);
       this.physics.add.collider(
         col.miss_zone as unknown as Phaser.Physics.Arcade.Sprite,
@@ -102,44 +124,26 @@ export default class Calendar extends Phaser.Scene {
       spawn_meeting_for_col(this.cols[index], velocity);
     };
     let KeyCodes = Phaser.Input.Keyboard.KeyCodes;
-    for (const [keyCode, str] of [
-      [KeyCodes.ESC, "ESC"],
-      [KeyCodes.A, "A"],
-      [KeyCodes.S, "S"],
-      [KeyCodes.D, "D"],
-      [KeyCodes.F, "F"],
-      [KeyCodes.SPACE, "SPACE"],
-      [KeyCodes.SHIFT, "SHIFT"],
-    ]) {
-      const index = this.cols.length;
-      const icon = this.add.text(x_posistions[index], 380, str.toString(), {
-        fontSize: 12,
-        color: "rgb(0,0,0)",
-      });
-      icon.setOrigin(0.5, 0.5);
-      const key = this.input.keyboard.addKey(keyCode);
-      const miss_zone = this.physics.add.staticBody(0, 0, width, 158);
-      const hit_zone = this.physics.add.sprite(
-        x_posistions[index],
-        156,
-        "ticker",
-        0
-      );
-      hit_zone.setOrigin(0.5, 0);
-      hit_zone.setDepth(1);
-      icon.setDepth(2);
-      // miss_zone.setOrigin(0, 0);
-      // this.physics.world.enableBody(miss_zone);
-      // miss_zone.body.setStatic(true);
-      this.cols.push({
-        key: key,
-        icon: icon,
-        x_pos: x_posistions[index],
-        miss_zone,
-        hit_zone,
-        meetings: [],
-      });
-      this.boxes.push(icon);
+    for (const [keyCode, str] of [ [KeyCodes.ESC, "ESC" ],
+                                  [KeyCodes.A, "A"],
+                                  [KeyCodes.S, "S"],
+                                  [KeyCodes.D, "D"],
+                                  [KeyCodes.F, "F"],
+                                  [KeyCodes.SPACE, "SPACE"],
+                                  [KeyCodes.SHIFT, "SHIFT"]]) {
+        const index = this.cols.length;
+        const icon = this.add.text(x_posistions[index], 380, str.toString(), {fontSize: 12, color: 'rgb(0,0,0)'});
+        icon.setOrigin(0.5, 0.5);
+        const key = this.input.keyboard.addKey(keyCode);
+        const miss_zone = this.physics.add.staticBody(0, 0, width, 158);
+        const hit_zone = this.physics.add.sprite(x_posistions[index], 156, 'ticker', 0,);
+        hit_zone.setOrigin(0.5, 0);
+        hit_zone.setDepth(1);
+        icon.setDepth(2);
+
+        this.cols.push({ key: key, icon: icon, x_pos: x_posistions[index],
+           miss_zone, hit_zone, meetings: [], miss_sound: this.sound.add("cal-fail"), hit_sound: this.sound.add("cal-pass")});
+        this.boxes.push(icon);
     }
     for (const [index, delay, velocity] of BeatMap) {
       this.time.addEvent({
@@ -198,13 +202,9 @@ export default class Calendar extends Phaser.Scene {
       meeting.setFrame(1);
       meeting.setVelocityY(0);
       meeting.disableBody(true, false);
-      this.time.addEvent({
-        delay: 200,
-        callback: () => {
-          meeting.destroy();
-        },
-      });
-    };
+      this.time.addEvent({delay: 200, callback: () => {meeting.destroy()}});
+      keyContext.hit_sound.play({seek: .5});
+    }
     const check_hit = (meeting: Phaser.Physics.Arcade.Sprite) => {
       this.physics.overlap(
         keyContext.hit_zone as unknown as Phaser.Physics.Arcade.Sprite,
@@ -214,12 +214,12 @@ export default class Calendar extends Phaser.Scene {
         : null;
     };
     // this.physics.checkOverlap(keyContext.miss_zone, keyContext.meetings, missed_meeting_collision_callback);
-    if (key.isDown && down_count === 1) {
-      box.setColor("rgb(0,255,0)");
+    if (key.isDown && down_count === 1){
+      box.setColor('rgb(34, 139, 34)');
       keyContext.meetings.forEach(check_hit);
       keyContext.hit_zone.setFrame(1);
-    } else if (key.isDown) {
-      box.setColor("rgb(255,0,0)");
+    } else if (key.isDown) { 
+      box.setColor('rgb(255, 195, 0)');
       keyContext.hit_zone.setFrame(0);
     } else {
       box.setColor("rgb(0 ,0,0)");
