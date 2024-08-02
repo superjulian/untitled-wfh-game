@@ -253,7 +253,7 @@ export const updateEndMessage = () => {
     endMessage = "You weren't able to squish \n\nall the bugs today... \n\nyou'll get to it tomorrow!"
   }
   if (missedMeetings > 10){
-    endMessage = "You were so slammed with meetings today\n\nthat you didn't get much done... \n\nOh well, you'll have more focus time \n\ntomorrow!"
+    endMessage = "You were so slammed with meetings\n\nthat you didn't get much done... \n\nOh well, you'll have more\n\nfocus time tomorrow!"
   }
   if (catPets > 5){
      endMessage = "Your cat knocked coffee on your \n\nkeyboard. Your computer broke and \n\nyou have to sign off early."
