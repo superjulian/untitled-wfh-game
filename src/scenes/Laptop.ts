@@ -177,7 +177,8 @@ init(data: any) {
     if (this.bugs < 1){
       this.fist?.destroy();
       setIsBugsSquished(true)
-      this.scene.stop();
+      this.scene.stop("Laptop");
+      this.scene.stop("Desktop");
 
     }
   }
